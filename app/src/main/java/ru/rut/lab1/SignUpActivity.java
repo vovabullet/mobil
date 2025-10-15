@@ -62,9 +62,20 @@ public class SignUpActivity extends BaseActivity {
                 }
                 
                 // Проверка возраста (должен быть больше 0)
-                if (age.getText().toString().isEmpty() || Integer.parseInt(age.getText().toString()) <= 0) {
-                    age.setError("Неверный возраст");
+                if (age.getText().toString().isEmpty()) {
+                    age.setError("Возраст обязателен");
                     valid = false;
+                } else {
+                    try {
+                        int ageValue = Integer.parseInt(age.getText().toString());
+                        if (ageValue <= 0) {
+                            age.setError("Неверный возраст");
+                            valid = false;
+                        }
+                    } catch (NumberFormatException e) {
+                        age.setError("Возраст должен быть числом");
+                        valid = false;
+                    }
                 }
                 
                 // Если все поля валидны, передаем данные обратно в SignInActivity

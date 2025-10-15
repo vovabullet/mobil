@@ -45,29 +45,20 @@ public class SignInActivity extends BaseActivity {
             String userName = receivedIntent.getStringExtra("USER_NAME");
             String userEmail = receivedIntent.getStringExtra("USER_EMAIL");
             
-            // Если данные переданы как строки, отображаем их
-            if (userName != null && userEmail != null) {
-                String infoText = "Зарегистрирован пользователь:\nИмя: " + userName + "\nEmail: " + userEmail;
-                registeredUserInfo.setText(infoText);
-                registeredUserInfo.setVisibility(View.VISIBLE);
-            }
-            
             // Вариант 2: Получение данных как объекта User (Serializable)
             User userSerializable = (User) receivedIntent.getSerializableExtra("USER_OBJECT_SERIALIZABLE");
-            if (userSerializable != null) {
-                String infoText = "Зарегистрирован пользователь (Serializable):\nИмя: " + 
-                    userSerializable.getName() + "\nEmail: " + userSerializable.getEmail();
-                registeredUserInfo.setText(infoText);
-                registeredUserInfo.setVisibility(View.VISIBLE);
-            }
             
             // Вариант 3: Получение данных как объекта User (Parcelable)
             User userParcelable = receivedIntent.getParcelableExtra("USER_OBJECT_PARCELABLE");
+            
+            // Отображаем информацию, если данные были переданы
+            // Используем приоритет: Parcelable > Serializable > Strings
             if (userParcelable != null) {
-                String infoText = "Зарегистрирован пользователь (Parcelable):\nИмя: " + 
-                    userParcelable.getName() + "\nEmail: " + userParcelable.getEmail();
-                registeredUserInfo.setText(infoText);
-                registeredUserInfo.setVisibility(View.VISIBLE);
+                displayUserInfo("Parcelable", userParcelable.getName(), userParcelable.getEmail());
+            } else if (userSerializable != null) {
+                displayUserInfo("Serializable", userSerializable.getName(), userSerializable.getEmail());
+            } else if (userName != null && userEmail != null) {
+                displayUserInfo("String", userName, userEmail);
             }
         }
 
@@ -106,5 +97,17 @@ public class SignInActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * Вспомогательный метод для отображения информации о зарегистрированном пользователе
+     * @param method метод передачи данных (String, Serializable, Parcelable)
+     * @param name имя пользователя
+     * @param email email пользователя
+     */
+    private void displayUserInfo(String method, String name, String email) {
+        String infoText = "Зарегистрирован пользователь (" + method + "):\nИмя: " + name + "\nEmail: " + email;
+        registeredUserInfo.setText(infoText);
+        registeredUserInfo.setVisibility(View.VISIBLE);
     }
 }
