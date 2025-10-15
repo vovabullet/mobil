@@ -85,7 +85,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            // Находим элементы по ID
+            // элементы по ID
             profileIcon = itemView.findViewById(R.id.profile_icon);
             senderName = itemView.findViewById(R.id.sender_name);
             lastMessage = itemView.findViewById(R.id.last_message);

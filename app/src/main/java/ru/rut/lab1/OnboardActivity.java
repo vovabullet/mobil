@@ -17,21 +17,21 @@ public class OnboardActivity extends BaseActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Устанавливаем тег для логирования
+        // тег для логирования
         TAG = "OnboardActivity";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboard);
 
-        // Находим кнопку "Далее" по ID из XML
+        // кнопка "Далее" по ID из XML
         Button nextButton = findViewById(R.id.next_button);
         
-        // Устанавливаем обработчик нажатия на кнопку
+        // обработчик нажатия на кнопку
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Создаем Intent для перехода на SignInActivity
+                // Intent для перехода на SignInActivity
                 Intent intent = new Intent(OnboardActivity.this, SignInActivity.class);
-                // Запускаем новую Activity
+                // новуа Activity
                 startActivity(intent);
             }
         });

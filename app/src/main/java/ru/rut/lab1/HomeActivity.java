@@ -19,23 +19,23 @@ public class HomeActivity extends BaseActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Устанавливаем тег для логирования
+        // тег для логирования
         TAG = "HomeActivity";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         // Настройка RecyclerView для отображения списка чатов
         RecyclerView recyclerView = findViewById(R.id.chat_list);
-        // Устанавливаем менеджер компоновки (линейный список)
+        // менеджер компоновки (линейный список)
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Создаем фиктивные данные для демонстрации
+        // фиктивные данные для демонстрации
         List<ChatItem> chatList = new ArrayList<>();
         chatList.add(new ChatItem("Алексей", "Привет, как дела?", "10:30", 0));
         chatList.add(new ChatItem("Мария", "Увидимся завтра?", "11:00", 0));
         chatList.add(new ChatItem("Игорь", "Отправил файл", "09:15", 0));
 
-        // Создаем и устанавливаем адаптер для RecyclerView
+        //  адаптер для RecyclerView
         ChatAdapter adapter = new ChatAdapter(chatList);
         recyclerView.setAdapter(adapter);
     }

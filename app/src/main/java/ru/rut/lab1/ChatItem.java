@@ -5,17 +5,9 @@ package ru.rut.lab1;
  * Содержит информацию об отправителе, сообщении, времени и иконке профиля.
  */
 public class ChatItem {
-
-    // Имя отправителя сообщения
     String sender;
-    
-    // Текст последнего сообщения
     String message;
-    
-    // Время отправки сообщения
     String time;
-    
-    // ID ресурса иконки профиля
     int profileIcon;
 
     /**

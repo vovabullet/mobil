@@ -25,19 +25,19 @@ public class SignInActivity extends BaseActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Устанавливаем тег для логирования
+        // тег для логирования
         TAG = "SignInActivity";
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        // Находим TextView для отображения информации о зарегистрированном пользователе
+        // TextView для отображения информации о зарегистрированном пользователе
         registeredUserInfo = findViewById(R.id.registered_user_info);
 
-        // Находим кнопки входа и регистрации
+        // кнопки входа и регистрации
         Button signInButton = findViewById(R.id.sign_in_button);
         Button signUpButton = findViewById(R.id.sign_up_button);
 
-        // Получаем данные от SignUpActivity (если они были переданы)
+        // данные от SignUpActivity (если они были переданы)
         Intent receivedIntent = getIntent();
         if (receivedIntent != null) {
             
@@ -51,8 +51,8 @@ public class SignInActivity extends BaseActivity {
             // Вариант 3: Получение данных как объекта User (Parcelable)
             User userParcelable = receivedIntent.getParcelableExtra("USER_OBJECT_PARCELABLE");
             
-            // Отображаем информацию, если данные были переданы
-            // Используем приоритет: Parcelable > Serializable > Strings
+            // информация, если данные были переданы
+            // приоритет: Parcelable > Serializable > Strings
             if (userParcelable != null) {
                 displayUserInfo("Parcelable", userParcelable.getName(), userParcelable.getEmail());
             } else if (userSerializable != null) {
@@ -62,31 +62,29 @@ public class SignInActivity extends BaseActivity {
             }
         }
 
-        // Устанавливаем слушатель для кнопки входа
+        // слушатель для кнопки входа
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Находим поля ввода email и пароля
+                // поля ввода email и пароля
                 EditText email = findViewById(R.id.email_input);
                 EditText password = findViewById(R.id.password_input);
 
-                // Проверяем, что оба поля заполнены
+                // оба поля заполнены ?
                 if (!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
                     // Сейчас просто принимаем любые непустые значения
                     Toast.makeText(SignInActivity.this, "Вход выполнен!", Toast.LENGTH_SHORT).show();
                     
-                    // Создаем Intent для перехода на HomeActivity
+                    // Intent для перехода на HomeActivity
                     Intent intent = new Intent(SignInActivity.this, HomeActivity.class);
-                    // Запускаем HomeActivity
                     startActivity(intent);
                 } else {
-                    // Если поля не заполнены, показываем сообщение об ошибке
                     Toast.makeText(SignInActivity.this, "Заполните поля", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        // Устанавливаем слушатель для кнопки регистрации
+        // слушатель для кнопки регистрации
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
