@@ -55,11 +55,11 @@ public class SignUpActivity extends BaseActivity {
                     valid = false;
                 }
                 
-                // Проверка пароля (минимум 6 символов)
-                if (password.getText().toString().length() < 6) {
-                    password.setError("Пароль слишком короткий");
-                    valid = false;
-                }
+//                // Проверка пароля (минимум 6 символов)
+//                if (password.getText().toString().length() < 6) {
+//                    password.setError("Пароль слишком короткий");
+//                    valid = false;
+//                }
                 
                 // Проверка возраста (должен быть больше 0)
                 if (age.getText().toString().isEmpty()) {
@@ -96,11 +96,11 @@ public class SignUpActivity extends BaseActivity {
                         email.getText().toString(),
                         password.getText().toString()
                     );
-                    intent.putExtra("USER_OBJECT_SERIALIZABLE", user);
-                    
-                    // Вариант 3: Передача данных с использованием объекта User (Parcelable)
-                    intent.putExtra("USER_OBJECT_PARCELABLE", user);
-                    
+//                    intent.putExtra("USER_OBJECT_SERIALIZABLE", user);
+//
+//                    // Вариант 3: Передача данных с использованием объекта User (Parcelable)
+//                    intent.putExtra("USER_OBJECT_PARCELABLE", user);
+
                     // Запускаем SignInActivity с переданными данными
                     startActivity(intent);
                     // Закрываем текущую Activity

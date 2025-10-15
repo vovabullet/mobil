@@ -72,7 +72,6 @@ public class SignInActivity extends BaseActivity {
 
                 // Проверяем, что оба поля заполнены
                 if (!email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()) {
-                    // Здесь должна быть реальная проверка учетных данных
                     // Сейчас просто принимаем любые непустые значения
                     Toast.makeText(SignInActivity.this, "Вход выполнен!", Toast.LENGTH_SHORT).show();
                     
