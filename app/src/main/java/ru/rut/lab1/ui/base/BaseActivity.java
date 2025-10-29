@@ -1,4 +1,4 @@
-package ru.rut.lab1;
+package ru.rut.lab1.ui.base;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
  * Базовый класс для всех Activity приложения.
  * Содержит логирование всех методов жизненного цикла Activity.
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
     
     // Тег для логирования, будет переопределен в наследниках
     protected String TAG = "BaseActivity";
