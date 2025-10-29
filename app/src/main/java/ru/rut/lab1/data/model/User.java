@@ -1,4 +1,4 @@
-package ru.rut.lab1;
+package ru.rut.lab1.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

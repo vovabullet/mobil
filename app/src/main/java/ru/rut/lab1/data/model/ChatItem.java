@@ -1,4 +1,4 @@
-package ru.rut.lab1;
+package ru.rut.lab1.data.model;
 
 /**
  * Класс для хранения данных элемента чата.

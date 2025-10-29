@@ -1,4 +1,4 @@
-package ru.rut.lab1;
+package ru.rut.lab1.ui.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import ru.rut.lab1.R;
+import ru.rut.lab1.data.model.ChatItem;
 
 /**
  * Адаптер для RecyclerView для отображения списка чатов.

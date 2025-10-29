@@ -1,33 +1,38 @@
-package ru.rut.lab1;
+package ru.rut.lab1.ui.main;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Главная Activity приложения с списком чатов.
- * Наследуется от BaseActivity для логирования жизненного цикла.
- */
-public class HomeActivity extends BaseActivity {
+import ru.rut.lab1.R;
+import ru.rut.lab1.data.model.ChatItem;
+import ru.rut.lab1.ui.adapters.ChatAdapter;
 
-    /**
-     * Инициализация Activity при создании.
-     * Настраивает RecyclerView для отображения списка чатов.
-     */
+/**
+ * Главный экран с чатом (фрагмент вместо Activity)
+ */
+public class HomeFragment extends Fragment {
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        // тег для логирования
-        TAG = "HomeActivity";
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Настройка RecyclerView для отображения списка чатов
-        RecyclerView recyclerView = findViewById(R.id.chat_list);
+        RecyclerView recyclerView = view.findViewById(R.id.chat_list);
         // менеджер компоновки (линейный список)
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // фиктивные данные для демонстрации
         List<ChatItem> chatList = new ArrayList<>();
@@ -38,5 +43,7 @@ public class HomeActivity extends BaseActivity {
         //  адаптер для RecyclerView
         ChatAdapter adapter = new ChatAdapter(chatList);
         recyclerView.setAdapter(adapter);
+
+        return view;
     }
 }
