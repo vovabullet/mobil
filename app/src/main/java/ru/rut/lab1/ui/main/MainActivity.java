@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 import ru.rut.lab1.R;
 import ru.rut.lab1.ui.base.BaseActivity;
 
-// единственная activity
 public class MainActivity extends BaseActivity {
 
     @Override

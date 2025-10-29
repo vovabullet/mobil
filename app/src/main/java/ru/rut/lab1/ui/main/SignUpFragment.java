@@ -98,8 +98,7 @@ public class SignUpFragment extends Fragment {
                     // передаём аргументы фрагменту
                     signInFragment.setArguments(args);
                     // переход на другой фрагмент
-                    ((MainActivity) requireActivity()).openFragment(signInFragment);
-
+                    ((MainActivity) requireActivity()).openFragment(signInFragment, false);
                 }
             }
         });

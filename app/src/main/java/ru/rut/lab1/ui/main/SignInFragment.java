@@ -64,7 +64,7 @@ public class SignInFragment extends Fragment {
                     Toast.makeText(requireContext(), "Вход выполнен!", Toast.LENGTH_SHORT).show();
 
                     // переход на другой фрагмент
-                    ((MainActivity) requireActivity()).openFragment(new HomeFragment());
+                    ((MainActivity) requireActivity()).openFragment(new HomeFragment(), false);
 
                 } else {
                     Toast.makeText(requireContext(), "Заполните поля", Toast.LENGTH_SHORT).show();
@@ -76,7 +76,7 @@ public class SignInFragment extends Fragment {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) requireActivity()).openFragment(new SignUpFragment());
+                ((MainActivity) requireActivity()).openFragment(new SignUpFragment(), false);
             }
         });
 
