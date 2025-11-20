@@ -1,42 +1,41 @@
 package ru.rut.lab1.ui.main;
 
 import android.os.Bundle;
+import android.util.Log;
 
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import ru.rut.lab1.R;
 import ru.rut.lab1.ui.base.BaseActivity;
 
 public class MainActivity extends BaseActivity {
+    protected String TAG = "MainActivity";
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new OnboardFragment())
-                    .commit();
+        // Находим NavHostFragment из разметки
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+            // Если будет Toolbar/ActionBar
+            // NavigationUI.setupActionBarWithNavController(this, navController);
+        } else {
+            Log.e(TAG, "navController is null!");
         }
     }
 
-    public void openFragment(Fragment fragment, boolean addToBackStack) {
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment);
-        if (addToBackStack)
-            transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    public void openFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+    // для кнопки "Назад" в ActionBar
+    @Override
+    public boolean onSupportNavigateUp() {
+        return navController != null && navController.navigateUp() || super.onSupportNavigateUp();
     }
 }

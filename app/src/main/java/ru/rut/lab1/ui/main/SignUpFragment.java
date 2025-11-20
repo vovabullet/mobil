@@ -12,15 +12,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import ru.rut.lab1.R;
-import ru.rut.lab1.data.model.User;
 
 /**
  * Fragment для регистрации нового пользователя
  */
 public class SignUpFragment extends Fragment {
-
     /**
      * Инициализация Activity при создании.
      * Настраивает форму регистрации и обработчик кнопки.
@@ -33,6 +33,8 @@ public class SignUpFragment extends Fragment {
 
         // Находим кнопку регистрации по ID
         Button registerButton = view.findViewById(R.id.register_button);
+
+        NavController navController = NavHostFragment.findNavController(SignUpFragment.this);
 
         // Устанавливаем слушатель нажатия на кнопку регистрации
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -83,22 +85,15 @@ public class SignUpFragment extends Fragment {
                 if (valid) {
                     Toast.makeText(getContext(), "Регистрация успешна", Toast.LENGTH_SHORT).show();
 
-                    // Вариант 2: Передача данных с использованием объекта User (Serializable)
-                    User user = new User(
-                            name.getText().toString(),
-                            email.getText().toString(),
-                            password.getText().toString()
-                    );
+                    String userName = name.getText().toString();
+                    String userEmail = email.getText().toString();
 
-                    // создаём новый фрагмент для входа
-                    SignInFragment signInFragment = new SignInFragment();
-                    // создаём bundle и кладём туда user
-                    Bundle args = new Bundle();
-                    args.putSerializable("USER_DATA", user);
-                    // передаём аргументы фрагменту
-                    signInFragment.setArguments(args);
-                    // переход на другой фрагмент
-                    ((MainActivity) requireActivity()).openFragment(signInFragment, false);
+                    SignUpFragmentDirections.ActionSignUpFragmentToSignInFragment action =
+                            SignUpFragmentDirections.actionSignUpFragmentToSignInFragment()
+                                    .setUSERNAME(userName)
+                                    .setUSEREMAIL(userEmail);
+
+                    navController.navigate(action);
                 }
             }
         });

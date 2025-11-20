@@ -9,6 +9,8 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import ru.rut.lab1.R;
 
@@ -30,7 +32,9 @@ public class OnboardFragment extends Fragment {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) requireActivity()).openFragment(new SignInFragment());
+                NavController navController =
+                        NavHostFragment.findNavController(OnboardFragment.this);
+                navController.navigate(R.id.action_onboardFragment_to_signInFragment);
             }
         });
 

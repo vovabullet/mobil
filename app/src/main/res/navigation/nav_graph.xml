@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/onboardFragment">
+
+    <!-- OnboardFragment — первый экран -->
+    <fragment
+        android:id="@+id/onboardFragment"
+        android:name="ru.rut.lab1.ui.main.OnboardFragment"
+        android:label="Onboard">
+
+        <!-- Переход с onboarding на экран входа -->
+        <action
+            android:id="@+id/action_onboardFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+
+    <!-- Экран входа -->
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="ru.rut.lab1.ui.main.SignInFragment"
+        android:label="Sign In">
+
+        <!-- Аргументы, которые может получить SignInFragment из SignUpFragment-->
+        <argument
+            app:nullable="true"
+            android:name="USER_NAME"
+            app:argType="string"
+            android:defaultValue="@null" />
+
+        <argument
+            app:nullable="true"
+            android:name="USER_EMAIL"
+            app:argType="string"
+            android:defaultValue="@null" />
+
+        <!-- Переход на регистрацию -->
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+
+        <!-- Переход на главный экран (чаты) после успешного входа -->
+        <action
+            android:id="@+id/action_signInFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+
+    <!-- Экран регистрации -->
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="ru.rut.lab1.ui.main.SignUpFragment"
+        android:label="Sign Up">
+
+        <!-- Переход обратно на экран входа (после успешной регистрации) -->
+        <action
+            android:id="@+id/action_signUpFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+
+    <!-- Главный экран с чатом -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="ru.rut.lab1.ui.main.HomeFragment"
+        android:label="Home" />
+</navigation>
