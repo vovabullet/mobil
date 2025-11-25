@@ -28,7 +28,6 @@
             android:name="USER_NAME"
             app:argType="string"
             android:defaultValue="@null" />
-
         <argument
             app:nullable="true"
             android:name="USER_EMAIL"
@@ -43,7 +42,7 @@
         <!-- Переход на главный экран (чаты) после успешного входа -->
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/tronesFragment" />
     </fragment>
 
     <!-- Экран регистрации -->
@@ -52,7 +51,7 @@
         android:name="ru.rut.lab1.ui.main.SignUpFragment"
         android:label="Sign Up">
 
-        <!-- Переход обратно на экран входа (после успешной регистрации) -->
+        <!-- Переход обратно на экран входа -->
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -62,5 +61,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="ru.rut.lab1.ui.main.HomeFragment"
+        android:label="Home" />
+
+    <!-- Экран с Игрой Престолов" -->
+    <fragment
+        android:id="@+id/tronesFragment"
+        android:name="ru.rut.lab1.ui.main.TronesFragment"
         android:label="Home" />
 </navigation>

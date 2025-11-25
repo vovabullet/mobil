@@ -1,4 +1,4 @@
-package ru.rut.lab1.ui.adapters;
+package ru.rut.lab1.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

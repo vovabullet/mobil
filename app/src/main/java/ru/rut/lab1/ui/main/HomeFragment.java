@@ -16,7 +16,7 @@ import java.util.List;
 
 import ru.rut.lab1.R;
 import ru.rut.lab1.data.model.ChatItem;
-import ru.rut.lab1.ui.adapters.ChatAdapter;
+import ru.rut.lab1.ui.adapter.ChatAdapter;
 
 /**
  * Главный экран с чатом (фрагмент вместо Activity)

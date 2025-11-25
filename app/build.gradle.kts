@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "2.0.21"
 }
 
@@ -47,6 +48,18 @@ android {
 }
 
 dependencies {
+    // Интернет ====================================================================================
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Gson для десериализации JSON
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // OkHttp для логирования запросов (опционально)
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Навигация ===================================================================================
     val nav_version = "2.9.6"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -57,6 +70,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
+    // Остальное ===================================================================================
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.google.android.material:material:1.13.0")
