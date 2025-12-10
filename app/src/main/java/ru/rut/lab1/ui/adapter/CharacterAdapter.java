@@ -20,11 +20,41 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         notifyDataSetChanged();
     }
 
+    // получение списка
+    public List<Character> getCharacters() {
+        return characters;
+    }
+
+    // сохранения в файл
+    public String getCharactersAsText() {
+        if (characters == null || characters.isEmpty()) {
+            return "Нет данных для сохранения";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Персонажи Game of Thrones ===\n");
+        sb.append("Всего: ").append(characters.size()). append(" персонажей\n");
+        sb.append("=====================================\n\n");
+
+        for (int i = 0; i < characters.size(); i++) {
+            Character c = characters.get(i);
+            sb.append("--- Персонаж #").append(i + 1).append(" ---\n");
+            sb.append("Имя: ").append(c. getName().isEmpty() ? "Неизвестно" : c.getName()).append("\n");
+            sb.append("Культура: ").append(c.getCulture()). append("\n");
+            sb.append("Рождение: ").append(c.getBorn()).append("\n");
+            sb.append("Титулы: ").append(String.join(", ", c.getTitles())).append("\n");
+            sb.append("Прозвища: ").append(String.join(", ", c.getAliases())).append("\n");
+            sb.append("Актёры: ").append(String.join(", ", c.getPlayedBy())).append("\n");
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_character, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_character, parent, false);
         return new CharacterViewHolder(view);
     }
 

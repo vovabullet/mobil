@@ -48,6 +48,13 @@ android {
 }
 
 dependencies {
+    // Файлы =======================================================================================
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.2.0")
+
+    // Для работы с SharedPreferences
+    implementation("androidx.preference:preference:1.2.1")
+
     // Интернет ====================================================================================
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -58,6 +65,7 @@ dependencies {
 
     // OkHttp для логирования запросов (опционально)
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("androidx.datastore:datastore-preferences-rxjava3:1.2.0")
 
     // Навигация ===================================================================================
     val nav_version = "2.9.6"

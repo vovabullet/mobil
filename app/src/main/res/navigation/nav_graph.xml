@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/onboardFragment">
 
@@ -42,7 +43,7 @@
         <!-- Переход на главный экран (чаты) после успешного входа -->
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
-            app:destination="@id/tronesFragment" />
+            app:destination="@id/homeFragment" />
     </fragment>
 
     <!-- Экран регистрации -->
@@ -61,11 +62,30 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="ru.rut.lab1.ui.main.HomeFragment"
-        android:label="Home" />
+        android:label="Home">
 
-    <!-- Экран с Игрой Престолов" -->
+        <!-- Переход на экран персонажей Игры Престолов -->
+        <action
+            android:id="@+id/action_homeFragment_to_tronesFragment"
+            app:destination="@id/tronesFragment" />
+
+        <!-- Переход на экран настроек -->
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+
+    <!-- Экран с персонажами Игры Престолов -->
     <fragment
         android:id="@+id/tronesFragment"
         android:name="ru.rut.lab1.ui.main.TronesFragment"
-        android:label="Home" />
+        android:label="Персонажи"
+        tools:layout="@layout/fragment_trones" />
+
+    <!-- Экран настроек -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ru.rut.lab1.ui.main.SettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_settings" />
 </navigation>

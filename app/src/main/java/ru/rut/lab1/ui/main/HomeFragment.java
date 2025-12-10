@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,13 +38,25 @@ public class HomeFragment extends Fragment {
 
         // фиктивные данные для демонстрации
         List<ChatItem> chatList = new ArrayList<>();
-        chatList.add(new ChatItem("Алексей", "Привет, как дела?", "10:30", 0));
-        chatList.add(new ChatItem("Мария", "Увидимся завтра?", "11:00", 0));
+        chatList.add(new ChatItem("Алексей", "Привет, как дела?", "11:30", 0));
+        chatList.add(new ChatItem("Мария", "Увидимся завтра?", "10:00", 0));
         chatList.add(new ChatItem("Игорь", "Отправил файл", "09:15", 0));
 
         //  адаптер для RecyclerView
         ChatAdapter adapter = new ChatAdapter(chatList);
         recyclerView.setAdapter(adapter);
+
+        // Настройка кнопок навигации
+        Button btnGoToTrones = view. findViewById(R.id.btn_go_to_trones);
+        Button btnGoToSettings = view. findViewById(R.id.btn_go_to_settings);
+
+        btnGoToTrones. setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_tronesFragment)
+        );
+
+        btnGoToSettings. setOnClickListener(v ->
+                Navigation.findNavController(v).navigate(R.id.action_homeFragment_to_settingsFragment)
+        );
 
         return view;
     }

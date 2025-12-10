@@ -17,7 +17,7 @@ public class CharacterRepository {
         void onError(String message);
     }
 
-    // Метод для загрузки персонажей по диапазону ID
+    // загрузка персонажей по диапазону ID
     // вариант 6: ID 251-300
     public void loadCharacters(int startId, int endId, CharacterCallback callback) {
         List<Character> characters = new ArrayList<>();

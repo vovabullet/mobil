@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 import ru.rut.lab1.R;
+import ru.rut.lab1.data.BackupManager;
+import ru.rut.lab1.data.CharacterStorage;
 import ru.rut.lab1.data.model.Character;
 import ru.rut.lab1.data.repository.CharacterRepository;
 import ru.rut.lab1.ui.adapter.CharacterAdapter;
@@ -22,6 +24,7 @@ public class TronesFragment extends Fragment {
     private ProgressBar progressBar;
     private CharacterAdapter adapter;
     private CharacterRepository repository;
+    private BackupManager backupManager;
 
     // вариант 6
     private static final int START_ID = 251;
@@ -29,7 +32,8 @@ public class TronesFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_trones, container, false);
     }
@@ -46,6 +50,8 @@ public class TronesFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         repository = new CharacterRepository();
+        backupManager = new BackupManager(requireContext());
+
         loadCharacters();
     }
 
@@ -59,6 +65,17 @@ public class TronesFragment extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         progressBar.setVisibility(View.GONE);
                         adapter.setCharacters(characters);
+
+                        // сохранение в общее хранилище
+                        CharacterStorage.getInstance().setCharacters(characters);
+
+                        // авто-бекап
+                        boolean backupSuccess = backupManager.createBackup(characters);
+                        if (backupSuccess) {
+                            Toast.makeText(getContext(), "Бекап создан", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Бекап не создан!", Toast.LENGTH_SHORT).show();
+                        }
                     });
                 }
             }
