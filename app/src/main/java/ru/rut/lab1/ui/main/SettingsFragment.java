@@ -22,6 +22,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import ru.rut.lab1.R;
 import ru.rut.lab1.data.BackupManager;
 import ru.rut.lab1.data.CharacterStorage;
+import ru.rut.lab1.databinding.FragmentSettingsBinding;
+import ru.rut.lab1.utils.Helpers;
 
 public class SettingsFragment extends Fragment {
 
@@ -42,22 +44,24 @@ public class SettingsFragment extends Fragment {
     private static final int DEFAULT_FONT_SIZE = 5;
     private static final String DEFAULT_BACKUP_FILENAME = "backup_6"; // 6 вариант
 
-    // UI элементы
-    private TextInputEditText etNickname, etEmail, etBackupFileName;
-    private SwitchMaterial switchNotifications, switchDarkTheme;
-    private SeekBar seekBarFontSize;
-    private TextView tvFileStatus, tvFileName, tvFileSize, tvFileDate, tvBackupStatus;
-    private Button btnCreateBackup, btnDeleteFile, btnRestoreBackup, btnSaveSettings;
+    // UI элементы (с биндингом больше не нужно
+//    private TextInputEditText etNickname, etEmail, etBackupFileName;
+//    private SwitchMaterial switchNotifications, switchDarkTheme;
+//    private SeekBar seekBarFontSize;
+//    private TextView tvFileStatus, tvFileName, tvFileSize, tvFileDate, tvBackupStatus;
+//    private Button btnCreateBackup, btnDeleteFile, btnRestoreBackup, btnSaveSettings;
 
     private SharedPreferences sharedPreferences;
     private BackupManager backupManager;
+    private FragmentSettingsBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -67,50 +71,56 @@ public class SettingsFragment extends Fragment {
         sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         backupManager = new BackupManager(requireContext());
 
-        initViews(view);
+//        initViews(view);
         loadSettings();
         setupListeners();
         updateFileInfo();
     }
 
-    private void initViews(View view) {
-        etNickname = view.findViewById(R.id.etNickname);
-        etEmail = view.findViewById(R. id.etEmail);
-
-        switchNotifications = view.findViewById(R.id.switchNotifications);
-        switchDarkTheme = view.findViewById(R.id.switchDarkTheme);
-        seekBarFontSize = view.findViewById(R.id.seekBarFontSize);
-
-        etBackupFileName = view.findViewById(R.id.etBackupFileName);
-        tvFileStatus = view.findViewById(R.id.tvFileStatus);
-        tvFileName = view.findViewById(R.id.tvFileName);
-        tvFileSize = view.findViewById(R.id.tvFileSize);
-        tvFileDate = view.findViewById(R.id.tvFileDate);
-        tvBackupStatus = view.findViewById(R.id.tvBackupStatus);
-
-        btnCreateBackup = view.findViewById(R.id.btnCreateBackup);
-        btnDeleteFile = view.findViewById(R.id.btnDeleteFile);
-        btnRestoreBackup = view.findViewById(R.id.btnRestoreBackup);
-        btnSaveSettings = view.findViewById(R.id.btnSaveSettings);
-    }
+    // с биндингом это больше не нужно
+//    private void initViews(View view) {
+//        etNickname = view.findViewById(R.id.etNickname);
+//        etEmail = view.findViewById(R. id.etEmail);
+//
+//        switchNotifications = view.findViewById(R.id.switchNotifications);
+//        switchDarkTheme = view.findViewById(R.id.switchDarkTheme);
+//        seekBarFontSize = view.findViewById(R.id.seekBarFontSize);
+//
+//        etBackupFileName = view.findViewById(R.id.etBackupFileName);
+//        tvFileStatus = view.findViewById(R.id.tvFileStatus);
+//        tvFileName = view.findViewById(R.id.tvFileName);
+//        tvFileSize = view.findViewById(R.id.tvFileSize);
+//        tvFileDate = view.findViewById(R.id.tvFileDate);
+//        tvBackupStatus = view.findViewById(R.id.tvBackupStatus);
+//
+//        btnCreateBackup = view.findViewById(R.id.btnCreateBackup);
+//        btnDeleteFile = view.findViewById(R.id.btnDeleteFile);
+//        btnRestoreBackup = view.findViewById(R.id.btnRestoreBackup);
+//        btnSaveSettings = view.findViewById(R.id.btnSaveSettings);
+//    }
 
     /**
      * Загрузка настроек из SharedPreferences
      */
     private void loadSettings() {
-        etNickname.setText(sharedPreferences.getString(KEY_NICKNAME, DEFAULT_NICKNAME));
-        etEmail.setText(sharedPreferences. getString(KEY_EMAIL, DEFAULT_EMAIL));
-        switchNotifications.setChecked(sharedPreferences.getBoolean(KEY_NOTIFICATIONS, DEFAULT_NOTIFICATIONS));
-        switchDarkTheme.setChecked(sharedPreferences.getBoolean(KEY_DARK_THEME, DEFAULT_DARK_THEME));
-        seekBarFontSize.setProgress(sharedPreferences.getInt(KEY_FONT_SIZE, DEFAULT_FONT_SIZE));
-        etBackupFileName.setText(sharedPreferences.getString(KEY_BACKUP_FILENAME, DEFAULT_BACKUP_FILENAME));
+        // Прямой доступ через binding
+        String nickname = sharedPreferences.getString("nickname", "");
+        String email = sharedPreferences.getString("email", "");
+        boolean notifications = sharedPreferences.getBoolean("notifications", true);
+        boolean darkTheme = sharedPreferences.getBoolean("dark_theme", false);
+        int fontSize = sharedPreferences.getInt("font_size", 14);
+
+        binding.etNickname.setText(nickname);
+        binding.etEmail.setText(email);
+        binding.switchNotifications.setChecked(notifications);
+        binding.switchDarkTheme.setChecked(darkTheme);
+        binding.seekBarFontSize.setProgress(fontSize);
 
         // имя файла в BackupManager
-        backupManager.setCustomFileName(etBackupFileName.getText().toString());
-
-        applyTheme(switchDarkTheme.isChecked());
+        backupManager.setCustomFileName(binding.etBackupFileName.getText().toString());
     }
 
+    // TODO УДАЛИТЬ
     private void applyTheme(boolean isDarkTheme) {
         if (isDarkTheme) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -122,26 +132,26 @@ public class SettingsFragment extends Fragment {
     private void saveSettings() {
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(KEY_NICKNAME, etNickname.getText().toString());
-        editor.putString(KEY_EMAIL, etEmail.getText().toString());
-        editor.putBoolean(KEY_NOTIFICATIONS, switchNotifications.isChecked());
-        editor.putBoolean(KEY_DARK_THEME, switchDarkTheme.isChecked());
-        editor.putInt(KEY_FONT_SIZE, seekBarFontSize.getProgress());
-        editor.putString(KEY_BACKUP_FILENAME, etBackupFileName.getText().toString().trim());
+        editor.putString(KEY_NICKNAME, binding.etNickname.getText().toString());
+        editor.putString(KEY_EMAIL, binding.etEmail.getText().toString());
+        editor.putBoolean(KEY_NOTIFICATIONS, binding.switchNotifications.isChecked());
+        editor.putBoolean(KEY_DARK_THEME, binding.switchDarkTheme.isChecked());
+        editor.putInt(KEY_FONT_SIZE, binding.seekBarFontSize.getProgress());
+        editor.putString(KEY_BACKUP_FILENAME, binding.etBackupFileName.getText().toString().trim());
 
         editor.apply();
 
-        applyTheme(switchDarkTheme.isChecked());
-        backupManager.setCustomFileName(etBackupFileName.getText().toString().trim());
+        Helpers.applyTheme(binding.switchDarkTheme.isChecked());
+        backupManager.setCustomFileName(binding.etBackupFileName.getText().toString().trim());
 
         Toast.makeText(requireContext(), "Настройки сохранены", Toast.LENGTH_SHORT).show();
     }
 
     private void setupListeners() {
         // Кнопка сохранения
-        btnSaveSettings.setOnClickListener(v -> saveSettings());
+        binding.btnSaveSettings.setOnClickListener(v -> saveSettings());
 
-        btnCreateBackup.setOnClickListener(v -> {
+        binding.btnCreateBackup.setOnClickListener(v -> {
             // есть ли данные
             if (!CharacterStorage.getInstance().hasData()) {
                 Toast.makeText(getContext(), "Персонажи не загружены!", Toast.LENGTH_SHORT).show();
@@ -149,39 +159,45 @@ public class SettingsFragment extends Fragment {
             }
 
             // Обновляем имя файла перед сохранением
-            backupManager.setCustomFileName(etBackupFileName.getText().toString());
+            backupManager.setCustomFileName(binding.etBackupFileName.getText().toString());
 
             // создание бекап
             boolean success = backupManager.createBackup();
 
             if (success) {
                 Toast.makeText(getContext(), "Файл создан!", Toast.LENGTH_SHORT).show();
+                binding.tvBackupStatus.setText("Бекап создан!");
             } else {
                 Toast.makeText(getContext(), "Ошибка создания файла", Toast.LENGTH_SHORT).show();
+                binding.tvBackupStatus.setText("Ошибка создания файла");
             }
 
             updateFileInfo();
         });
 
-        btnDeleteFile.setOnClickListener(v -> {
+        binding.btnDeleteFile.setOnClickListener(v -> {
             boolean success = backupManager.deleteExternalFile();
 
             if (success) {
                 Toast.makeText(getContext(), "Файл удалён (копия сохранена)", Toast.LENGTH_SHORT).show();
+                binding.tvFileStatus.setText("Файл удалён (копия сохранена)");
             } else {
                 Toast.makeText(getContext(), "Файл не найден", Toast.LENGTH_SHORT).show();
+                binding.tvFileStatus.setText("Файл не найден");
             }
 
             updateFileInfo();
         });
 
-        btnRestoreBackup. setOnClickListener(v -> {
+        binding.btnRestoreBackup.setOnClickListener(v -> {
             boolean success = backupManager.restoreFromBackup();
 
             if (success) {
                 Toast.makeText(getContext(), "Файл восстановлен", Toast.LENGTH_SHORT).show();
+                binding.tvFileStatus.setText("Файл восстановлен");
             } else {
                 Toast.makeText(getContext(), "Резервная копия не найдена!", Toast.LENGTH_SHORT).show();
+                binding.tvFileStatus.setText("Резервная копия не найдена!");
             }
 
             updateFileInfo();
@@ -193,33 +209,33 @@ public class SettingsFragment extends Fragment {
         BackupManager.FileInfo fileInfo = backupManager.getExternalFileInfo();
 
         if (fileInfo != null) {
-            tvFileStatus.setText("Статус файла: создан");
-            tvFileName.setVisibility(View. VISIBLE);
-            tvFileName.setText("Имя: " + fileInfo.name);
-            tvFileSize.setVisibility(View. VISIBLE);
-            tvFileSize.setText("Размер: " + fileInfo.getFormattedSize());
-            tvFileDate.setVisibility(View.VISIBLE);
-            tvFileDate.setText("Изменён: " + fileInfo.getFormattedDate());
+//            binding.tvFileStatus.setText("Статус файла: создан");
+            binding.tvFileName.setVisibility(View. VISIBLE);
+            binding.tvFileName.setText("Имя: " + fileInfo.name);
+            binding.tvFileSize.setVisibility(View. VISIBLE);
+            binding.tvFileSize.setText("Размер: " + fileInfo.getFormattedSize());
+            binding.tvFileDate.setVisibility(View.VISIBLE);
+            binding.tvFileDate.setText("Изменён: " + fileInfo.getFormattedDate());
 
-            btnDeleteFile.setEnabled(true);
-            btnCreateBackup.setText("Обновить");
+            binding.btnDeleteFile.setEnabled(true);
+            binding.btnCreateBackup.setText("Обновить");
         } else {
-            tvFileStatus.setText("Статус файла: не создан");
-            tvFileName.setVisibility(View.GONE);
-            tvFileSize.setVisibility(View.GONE);
-            tvFileDate.setVisibility(View.GONE);
+//            binding.tvFileStatus.setText("Статус файла: не создан");
+            binding.tvFileName.setVisibility(View.GONE);
+            binding.tvFileSize.setVisibility(View.GONE);
+            binding.tvFileDate.setVisibility(View.GONE);
 
-            btnDeleteFile.setEnabled(false);
-            btnCreateBackup.setText("Создать");
+            binding.btnDeleteFile.setEnabled(false);
+            binding.btnCreateBackup.setText("Создать");
         }
 
         // Информация о резервной копии
         if (backupManager.backupExists()) {
-            tvBackupStatus.setText("Резервная копия: имеется");
-            btnRestoreBackup.setEnabled(true);
+            binding.tvBackupStatus.setText("Резервная копия: имеется");
+            binding.btnRestoreBackup.setEnabled(true);
         } else {
-            tvBackupStatus.setText("Резервная копия: отсутствует");
-            btnRestoreBackup.setEnabled(false);
+            binding.tvBackupStatus.setText("Резервная копия: отсутствует");
+            binding.btnRestoreBackup.setEnabled(false);
         }
     }
 
@@ -230,5 +246,11 @@ public class SettingsFragment extends Fragment {
     public void onPause() {
         super.onPause();
 //        saveSettings();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super. onDestroyView();
+        binding = null;
     }
 }

@@ -17,6 +17,7 @@ import ru.rut.lab1.data.BackupManager;
 import ru.rut.lab1.data.CharacterStorage;
 import ru.rut.lab1.data.model.Character;
 import ru.rut.lab1.data.repository.CharacterRepository;
+import ru.rut.lab1.databinding.FragmentTronesBinding;
 import ru.rut.lab1.ui.adapter.CharacterAdapter;
 
 public class TronesFragment extends Fragment {
@@ -25,6 +26,7 @@ public class TronesFragment extends Fragment {
     private CharacterAdapter adapter;
     private CharacterRepository repository;
     private BackupManager backupManager;
+    private FragmentTronesBinding binding;
 
     // вариант 6
     private static final int START_ID = 251;
@@ -35,15 +37,18 @@ public class TronesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_trones, container, false);
+        binding = FragmentTronesBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        recyclerView = view.findViewById(R.id.recyclerView);
-        progressBar = view.findViewById(R.id.progressBar);
+//        recyclerView = view.findViewById(R.id.recyclerView);
+//        progressBar = view.findViewById(R.id.progressBar);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.recyclerView. setAdapter(adapter);
 
         adapter = new CharacterAdapter();
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -63,7 +68,8 @@ public class TronesFragment extends Fragment {
             public void onSuccess(List<Character> characters) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        progressBar.setVisibility(View.GONE);
+//                        progressBar.setVisibility(View.GONE);
+                        binding. progressBar.setVisibility(View. GONE);
                         adapter.setCharacters(characters);
 
                         // сохранение в общее хранилище
@@ -84,11 +90,17 @@ public class TronesFragment extends Fragment {
             public void onError(String message) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        progressBar.setVisibility(View.GONE);
+                        binding.progressBar. setVisibility(View.GONE);
                         Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                     });
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // для избежания утечек памяти
     }
 }

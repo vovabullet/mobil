@@ -8,16 +8,23 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import ru.rut.lab1.R;
+import ru.rut.lab1.databinding.FragmentMainBinding;
 import ru.rut.lab1.ui.base.BaseActivity;
+import ru.rut.lab1.utils.Helpers;
 
 public class MainActivity extends BaseActivity {
     protected String TAG = "MainActivity";
     private NavController navController;
+    private FragmentMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // применяет тему из настроек
+        Helpers.applyThemeFromPrefs(this);
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_main);
+        binding = FragmentMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Находим NavHostFragment из разметки
         NavHostFragment navHostFragment =
@@ -26,7 +33,7 @@ public class MainActivity extends BaseActivity {
 
         if (navHostFragment != null) {
             navController = navHostFragment.getNavController();
-            // Если будет Toolbar/ActionBar
+            // для Toolbar/ActionBar
             // NavigationUI.setupActionBarWithNavController(this, navController);
         } else {
             Log.e(TAG, "navController is null!");

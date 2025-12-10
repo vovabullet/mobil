@@ -13,31 +13,32 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
 import ru.rut.lab1.R;
+import ru.rut.lab1.databinding.FragmentOnboardBinding;
 
 /**
  * Fragment для приветственного экрана (onboarding)
  */
 public class OnboardFragment extends Fragment {
+    private FragmentOnboardBinding binding;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_onboard, container, false);
-
-        // кнопка "Далее" по ID из XML
-        Button nextButton = view.findViewById(R.id.next_button);
+        binding = FragmentOnboardBinding. inflate(inflater, container, false);
 
         // обработчик нажатия на кнопку
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                NavController navController =
-                        NavHostFragment.findNavController(OnboardFragment.this);
-                navController.navigate(R.id.action_onboardFragment_to_signInFragment);
-            }
+        binding.nextButton.setOnClickListener(v -> {
+            NavController navController = NavHostFragment.findNavController(OnboardFragment.this);
+            navController. navigate(R.id.action_onboardFragment_to_signInFragment);
         });
 
-        return view;
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
