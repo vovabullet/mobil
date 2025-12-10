@@ -55,6 +55,10 @@ dependencies {
     // Для работы с SharedPreferences
     implementation("androidx.preference:preference:1.2.1")
 
+    // ассинхронность (для DataStore)
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0")
+
     // Интернет ====================================================================================
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

@@ -11,21 +11,22 @@ import androidx.datastore.rxjava3.RxDataStore;
 import io.reactivex. rxjava3. core.Flowable;
 import io.reactivex. rxjava3. core.Single;
 
+// TODO добавить пароль
 public class SettingsDataStore {
 
     private static final String DATASTORE_NAME = "settings_datastore";
 
     // кллючи для DataStore
-    public static final Preferences. Key<String> KEY_NICKNAME = PreferencesKeys.stringKey("nickname");
-    public static final Preferences.Key<Boolean> KEY_NOTIFICATIONS = PreferencesKeys.booleanKey("notifications");
-
+    public static final Preferences.Key<String> KEY_NICKNAME = PreferencesKeys.stringKey("nickname");
+    public static final Preferences.Key<String> KEY_EMAIL = PreferencesKeys.stringKey("email");
     private final RxDataStore<Preferences> dataStore;
 
     public SettingsDataStore(Context context) {
         dataStore = new RxPreferenceDataStoreBuilder(context, DATASTORE_NAME). build();
     }
 
-    // Сохранение никнейма
+    // nickname
+
     public Single<Preferences> saveNickname(String nickname) {
         return dataStore.updateDataAsync(preferences -> {
             MutablePreferences mutablePreferences = preferences.toMutablePreferences();
@@ -34,28 +35,42 @@ public class SettingsDataStore {
         });
     }
 
-    // Получение никнейма
-    public Flowable<String> getNickname() {
-        return dataStore.data().map(preferences -> {
-            String nickname = preferences.get(KEY_NICKNAME);
-            return nickname != null ? nickname : "User";
-        });
+    public Single<String> getNickname() {
+        return dataStore.data()
+                .map(preferences -> {
+                    String nickname = preferences.get(KEY_NICKNAME);
+                    return nickname != null ? nickname : "";
+                })
+                .firstOrError();
     }
 
-    // Сохранение настройки уведомлений
-    public Single<Preferences> saveNotifications(boolean enabled) {
+    // email
+
+    public Single<Preferences> saveEmail(String email) {
         return dataStore.updateDataAsync(preferences -> {
             MutablePreferences mutablePreferences = preferences.toMutablePreferences();
-            mutablePreferences.set(KEY_NOTIFICATIONS, enabled);
-            return Single. just(mutablePreferences);
+            mutablePreferences. set(KEY_EMAIL, email);
+            return Single.just(mutablePreferences);
         });
     }
 
-    // Получение настройки уведомлений
-    public Flowable<Boolean> getNotifications() {
-        return dataStore.data().map(preferences -> {
-            Boolean notifications = preferences.get(KEY_NOTIFICATIONS);
-            return notifications != null ? notifications : true;
+    public Single<String> getEmail() {
+        return dataStore.data()
+                .map(preferences -> {
+                    String email = preferences.get(KEY_EMAIL);
+                    return email != null ?  email : "";
+                })
+                .firstOrError();
+    }
+
+    // both
+
+    public Single<Preferences> saveUserData(String nickname, String email) {
+        return dataStore.updateDataAsync(preferences -> {
+            MutablePreferences mutablePreferences = preferences.toMutablePreferences();
+            mutablePreferences.set(KEY_NICKNAME, nickname);
+            mutablePreferences.set(KEY_EMAIL, email);
+            return Single.just(mutablePreferences);
         });
     }
 }

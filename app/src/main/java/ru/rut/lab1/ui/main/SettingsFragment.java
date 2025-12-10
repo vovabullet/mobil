@@ -19,9 +19,13 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import ru.rut.lab1.R;
 import ru.rut.lab1.data.BackupManager;
 import ru.rut.lab1.data.CharacterStorage;
+import ru.rut.lab1.data.SettingsDataStore;
 import ru.rut.lab1.databinding.FragmentSettingsBinding;
 import ru.rut.lab1.utils.Helpers;
 
@@ -37,12 +41,12 @@ public class SettingsFragment extends Fragment {
     private static final String KEY_BACKUP_FILENAME = "backup_filename";
 
     // Значения по умолчанию
-    private static final String DEFAULT_NICKNAME = "";
-    private static final String DEFAULT_EMAIL = "";
-    private static final boolean DEFAULT_NOTIFICATIONS = true;
-    private static final boolean DEFAULT_DARK_THEME = false;
-    private static final int DEFAULT_FONT_SIZE = 5;
-    private static final String DEFAULT_BACKUP_FILENAME = "backup_6"; // 6 вариант
+//    private static final String DEFAULT_NICKNAME = "";
+//    private static final String DEFAULT_EMAIL = "";
+//    private static final boolean DEFAULT_NOTIFICATIONS = true;
+//    private static final boolean DEFAULT_DARK_THEME = false;
+//    private static final int DEFAULT_FONT_SIZE = 5;
+//    private static final String DEFAULT_BACKUP_FILENAME = "backup_6"; // 6 вариант
 
     // UI элементы (с биндингом больше не нужно
 //    private TextInputEditText etNickname, etEmail, etBackupFileName;
@@ -51,9 +55,12 @@ public class SettingsFragment extends Fragment {
 //    private TextView tvFileStatus, tvFileName, tvFileSize, tvFileDate, tvBackupStatus;
 //    private Button btnCreateBackup, btnDeleteFile, btnRestoreBackup, btnSaveSettings;
 
-    private SharedPreferences sharedPreferences;
-    private BackupManager backupManager;
     private FragmentSettingsBinding binding;
+    private SharedPreferences sharedPreferences; // Для темы, уведомлений, размера шрифта
+    private SettingsDataStore dataStore; // Для nickname и email
+    private BackupManager backupManager;
+    // Для управления подписками RxJava
+    private CompositeDisposable disposables = new CompositeDisposable();
 
     @Nullable
     @Override
@@ -69,7 +76,9 @@ public class SettingsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sharedPreferences = requireContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        dataStore = new SettingsDataStore(requireContext());
         backupManager = new BackupManager(requireContext());
+        disposables = new CompositeDisposable();
 
 //        initViews(view);
         loadSettings();
@@ -103,20 +112,46 @@ public class SettingsFragment extends Fragment {
      * Загрузка настроек из SharedPreferences
      */
     private void loadSettings() {
-        // Прямой доступ через binding
-        String nickname = sharedPreferences.getString("nickname", "");
-        String email = sharedPreferences.getString("email", "");
+        // DataStore:  nickname и email
+        disposables.add(
+                dataStore.getNickname()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        . subscribe(
+                                nickname -> binding.etNickname.setText(nickname),
+                                error -> {
+                                    error.printStackTrace();
+                                    Toast.makeText(getContext(), "Ошибка загрузки nickname", Toast.LENGTH_SHORT).show();
+                                }
+                        )
+        );
+        disposables.add(
+                dataStore.getEmail()
+                        . subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                email -> binding.etEmail.setText(email),
+                                error -> {
+                                    error.printStackTrace();
+                                    Toast.makeText(getContext(), "Ошибка загрузки email", Toast.LENGTH_SHORT).show();
+                                }
+                        )
+        );
+
+        // SharedPreferences: остальное
         boolean notifications = sharedPreferences.getBoolean("notifications", true);
         boolean darkTheme = sharedPreferences.getBoolean("dark_theme", false);
         int fontSize = sharedPreferences.getInt("font_size", 14);
 
-        binding.etNickname.setText(nickname);
-        binding.etEmail.setText(email);
         binding.switchNotifications.setChecked(notifications);
         binding.switchDarkTheme.setChecked(darkTheme);
         binding.seekBarFontSize.setProgress(fontSize);
 
         // имя файла в BackupManager
+        // вот так вроде правильнее
+//        String backupFileName = sharedPreferences.getString(KEY_BACKUP_FILENAME, "backup_6");
+//        binding.etBackupFileName.setText(backupFileName);
+//        backupManager.setCustomFileName(backupFileName);
         backupManager.setCustomFileName(binding.etBackupFileName.getText().toString());
     }
 
@@ -130,10 +165,22 @@ public class SettingsFragment extends Fragment {
     }
 
     private void saveSettings() {
+        // DataStore
+        String nickname = binding.etNickname.getText().toString();
+        String email = binding. etEmail.getText().toString();
+        disposables.add(
+                dataStore.saveUserData(nickname, email)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers. mainThread())
+                        .subscribe(
+                                preferences -> Toast.makeText(getContext(), "Настройки сохранены", Toast.LENGTH_SHORT).show(),
+                                error -> Toast.makeText(getContext(), "Ошибка сохранения", Toast.LENGTH_SHORT).show()
+                        )
+        );
+
+        // SharedPreferences
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        editor.putString(KEY_NICKNAME, binding.etNickname.getText().toString());
-        editor.putString(KEY_EMAIL, binding.etEmail.getText().toString());
         editor.putBoolean(KEY_NOTIFICATIONS, binding.switchNotifications.isChecked());
         editor.putBoolean(KEY_DARK_THEME, binding.switchDarkTheme.isChecked());
         editor.putInt(KEY_FONT_SIZE, binding.seekBarFontSize.getProgress());
@@ -251,6 +298,10 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super. onDestroyView();
+        // Очищаем подписки
+        if (disposables != null) {
+            disposables.clear();
+        }
         binding = null;
     }
 }
