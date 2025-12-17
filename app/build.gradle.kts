@@ -48,6 +48,12 @@ android {
 }
 
 dependencies {
+    // Room ========================================================================================
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion") // Java annotation processing
+    implementation("androidx.room:room-rxjava3:$roomVersion")
+
     // Файлы =======================================================================================
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.2.0")
