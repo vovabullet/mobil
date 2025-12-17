@@ -2,15 +2,16 @@ package ru.rut.lab1.ui.adapter;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
-import ru.rut.lab1.R;
+
 import ru.rut.lab1.data.model.Character;
+import ru.rut.lab1.databinding.ItemCharacterBinding;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
     private List<Character> characters = new ArrayList<>();
@@ -20,12 +21,10 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         notifyDataSetChanged();
     }
 
-    // получение списка
     public List<Character> getCharacters() {
         return characters;
     }
 
-    // сохранения в файл
     public String getCharactersAsText() {
         if (characters == null || characters.isEmpty()) {
             return "Нет данных для сохранения";
@@ -33,19 +32,18 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
 
         StringBuilder sb = new StringBuilder();
         sb.append("=== Персонажи Game of Thrones ===\n");
-        sb.append("Всего: ").append(characters.size()). append(" персонажей\n");
+        sb.append("Всего: ").append(characters.size()).append(" персонажей\n");
         sb.append("=====================================\n\n");
 
         for (int i = 0; i < characters.size(); i++) {
             Character c = characters.get(i);
             sb.append("--- Персонаж #").append(i + 1).append(" ---\n");
-            sb.append("Имя: ").append(c. getName().isEmpty() ? "Неизвестно" : c.getName()).append("\n");
-            sb.append("Культура: ").append(c.getCulture()). append("\n");
+            sb.append("Имя: ").append(c.getName().isEmpty() ? "Неизвестно" : c.getName()).append("\n");
+            sb.append("Культура: ").append(c.getCulture()).append("\n");
             sb.append("Рождение: ").append(c.getBorn()).append("\n");
             sb.append("Титулы: ").append(String.join(", ", c.getTitles())).append("\n");
             sb.append("Прозвища: ").append(String.join(", ", c.getAliases())).append("\n");
-            sb.append("Актёры: ").append(String.join(", ", c.getPlayedBy())).append("\n");
-            sb.append("\n");
+            sb.append("Актёры: ").append(String.join(", ", c.getPlayedBy())).append("\n\n");
         }
 
         return sb.toString();
@@ -54,14 +52,17 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_character, parent, false);
-        return new CharacterViewHolder(view);
+        ItemCharacterBinding binding = ItemCharacterBinding.inflate(
+                LayoutInflater.from(parent.getContext()),
+                parent,
+                false
+        );
+        return new CharacterViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CharacterViewHolder holder, int position) {
-        Character character = characters.get(position);
-        holder.bind(character);
+        holder.bind(characters.get(position));
     }
 
     @Override
@@ -70,26 +71,21 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
     }
 
     static class CharacterViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameText, cultureText, bornText, titlesText, aliasesText, playedByText;
+        private final ItemCharacterBinding binding;
 
-        public CharacterViewHolder(@NonNull View itemView) {
-            super(itemView);
-            nameText = itemView.findViewById(R.id.nameText);
-            cultureText = itemView.findViewById(R.id.cultureText);
-            bornText = itemView.findViewById(R.id.bornText);
-            titlesText = itemView.findViewById(R.id.titlesText);
-            aliasesText = itemView.findViewById(R.id.aliasesText);
-            playedByText = itemView.findViewById(R.id.playedByText);
+        public CharacterViewHolder(@NonNull ItemCharacterBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         @SuppressLint("SetTextI18n")
         public void bind(Character character) {
-            nameText.setText("Name: " + (character.getName().isEmpty() ? "Unknown" : character.getName()));
-            cultureText.setText("Culture: " + character.getCulture());
-            bornText.setText("Born: " + character.getBorn());
-            titlesText.setText("Titles: " + String.join(", ", character.getTitles()));
-            aliasesText.setText("Aliases: " + String.join(", ", character.getAliases()));
-            playedByText.setText("Played by: " + String.join(", ", character.getPlayedBy()));
+            binding.nameText.setText("Name: " + (character.getName().isEmpty() ? "Unknown" : character.getName()));
+            binding.cultureText.setText("Culture: " + character.getCulture());
+            binding.bornText.setText("Born: " + character.getBorn());
+            binding.titlesText.setText("Titles: " + String.join(", ", character.getTitles()));
+            binding.aliasesText.setText("Aliases: " + String.join(", ", character.getAliases()));
+            binding.playedByText.setText("Played by: " + String.join(", ", character.getPlayedBy()));
         }
     }
 }
